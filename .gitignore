@@ -1,0 +1,23 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+.Python
+env/
+.venv/
+venv/
+ENV/
+
+# Test caches
+.pytest_cache/
+
+# Data files
+data/*.csv
+
+# Virtual environment
+.venv/
+
+# Editor files
+.vscode/
+*.swp
+Thumbs.db
+desktop.ini

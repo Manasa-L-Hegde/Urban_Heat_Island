@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #draggable-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #2ecc71, #1f9d55);
+            color: white;
+            border-radius: 50%;
+            border: none;
+            font-size: 32px;
+            cursor: grab;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+            z-index: 999;
+            user-select: none;
+            touch-action: none;
+            transition: box-shadow 0.2s ease;
+        }
+
+        #draggable-btn:hover:not(.dragging) {
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+            transform: scale(1.04);
+        }
+
+        #draggable-btn.dragging {
+            cursor: grabbing;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+        }
+
+        #draggable-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <button id="draggable-btn">🤖</button>
+
+    <script>
+        const btn = document.getElementById('draggable-btn');
+        let isDragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        // Handle mouse down - start dragging
+        btn.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            btn.classList.add('dragging');
+            
+            // Calculate offset from mouse to button center
+            const rect = btn.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            e.preventDefault();
+        });
+
+        // Handle mouse move - drag button
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            const newLeft = e.clientX - offsetX;
+            const newTop = e.clientY - offsetY;
+
+            btn.style.left = newLeft + 'px';
+            btn.style.right = 'auto';
+            btn.style.bottom = 'auto';
+            btn.style.top = newTop + 'px';
+        });
+
+        // Handle mouse up - stop dragging
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                btn.classList.remove('dragging');
+            }
+        });
+
+        // Handle click (toggle chatbot)
+        btn.addEventListener('click', (e) => {
+            // Only trigger click if not dragging significantly
+            if (!isDragging) {
+                // Send click event to Streamlit
+                window.parent.postMessage(
+                    { type: 'streamlit:setComponentValue', value: 'clicked' },
+                    '*'
+                );
+            }
+        });
+
+        // Prevent text selection while dragging
+        btn.addEventListener('selectstart', (e) => {
+            if (isDragging) e.preventDefault();
+        });
+    </script>
+</body>
+</html>
