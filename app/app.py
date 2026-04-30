@@ -165,11 +165,66 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-if not DATA_PATH.exists():
-    st.error("Missing dataset: data/ward_data.csv. Run src/data_generation.py first.")
-    st.stop()
+def load_or_generate_dataset(data_path: Path) -> pd.DataFrame:
+    """Load dataset from CSV or auto-generate if missing.
+    
+    This function:
+    1. Checks if the dataset file exists
+    2. If not, creates the data/ folder and auto-generates the dataset
+    3. Includes error handling with user-friendly messages
+    4. Logs status for debugging
+    
+    Parameters:
+        data_path (Path): Path to the ward_data.csv file
+        
+    Returns:
+        pd.DataFrame: Loaded or generated dataset
+    """
+    # Ensure data folder exists
+    data_dir = data_path.parent
+    data_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Check if dataset exists
+    if data_path.exists():
+        print(f"✓ Dataset found at {data_path}")
+        try:
+            df = pd.read_csv(data_path)
+            print(f"✓ Successfully loaded {len(df)} wards from dataset")
+            return df
+        except Exception as e:
+            st.error(f"❌ Failed to load dataset: {e}")
+            st.stop()
+    
+    # Dataset missing - auto-generate
+    print(f"📊 Dataset not found at {data_path}. Generating...")
+    st.info("🔄 Generating dataset on first run... This may take a moment.")
+    
+    try:
+        # Import and run the generation function
+        from src.data_generation import generate_ward_data, main as generate_main
+        
+        print("⏳ Calling data generation script...")
+        df = generate_ward_data()
+        
+        # Save to disk
+        from data.synthetic_data import save_city_ward_dataset
+        save_city_ward_dataset(df, data_path)
+        
+        print(f"✓ Dataset generated and saved to {data_path}")
+        print(f"✓ Generated {len(df)} wards")
+        st.success("✅ Dataset auto-generated successfully!")
+        
+        return df
+        
+    except Exception as e:
+        error_msg = f"Failed to auto-generate dataset: {str(e)}"
+        print(f"❌ {error_msg}")
+        st.error(f"❌ {error_msg}\n\nPlease ensure `src/data_generation.py` and dependencies are installed.")
+        st.stop()
 
-raw_df = pd.read_csv(DATA_PATH)
+
+# Load or generate the dataset
+raw_df = load_or_generate_dataset(DATA_PATH)
 processed_df = build_heat_index(fuse_temperatures(raw_df))
 processed_df = generate_green_cover_recommendations(processed_df)
 green_cover_col = _find_column(processed_df, ["Green Cover", "Green Cover (%)", "Green Cover %"])
