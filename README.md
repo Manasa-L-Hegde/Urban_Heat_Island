@@ -1,67 +1,65 @@
-# Urban Heat Island Hyperlocal Mapping System
+# 🌡️ Urban Heat Island — Hyperlocal Mapping
 
-## Problem Statement
-Urban Heat Island (UHI) is the phenomenon where built-up parts of a city become hotter than nearby areas because of dense buildings, limited green cover, impervious surfaces, and trapped heat. This creates real health and infrastructure risks, especially for elderly residents and low-income communities. Municipal corporations often lack a ward-level map showing where these hotspots are concentrated and how they change across seasons.
+Data-driven Streamlit application that identifies and visualizes urban heat islands at the ward level. The app fuses satellite thermal imagery, ground weather station readings, and ward-level attributes to produce interactive heat-risk maps, ward dashboards, and actionable green-cover recommendations.
 
-## Solution Overview
-This project fuses satellite thermal imagery, ground-level weather station readings, and building density data to create a hyperlocal city heat map at ward level. The goal is to identify wards under the highest heat stress, overlay that risk with population density, and generate practical actions such as tree planting, reflective roofing, and summer heat advisories.
+Live demo: YOUR_DEPLOY_URL_HERE (replace with your deployed Streamlit URL)
 
-## Features Implemented (Current Progress)
-- Dataset creation at ward level (synthetic generator)
-- Data fusion: Satellite + Weather temperature -> `Final_Temperature`
-- Heat Index calculation with normalized inputs and vulnerability scoring
-- Heat advisory labels based on `Heat_Index` thresholds
-- Green cover recommendation system at ward level
-- Streamlit dashboard with interactive Folium map, ward search linked to map,
-  draggable chatbot button, and AI-assisted insights (LLM and rule-based fallbacks)
-- Simple ML model to predict AI risk labels (`models/heat_risk_model.py`)
-- Unit tests for core helpers (see `tests/`)
+---
 
-## Installation & Run (local)
-1. Create and activate a Python environment (recommended: Anaconda or venv).
+## Quick overview
+- Combines satellite + weather + built-environment data into a ward-level `Final_Temperature`.
+- Computes a `Heat_Index` and `Vulnerability_Index`, assigns `Vulnerability_Category` (Low/Medium/High).
+- Streamlit dashboard with interactive Folium map, ward chooser, charts, and an AI heat-risk advisor.
 
-	```bash
-	python -m venv .venv
-	source .venv/Scripts/activate  # Windows: .venv\Scripts\activate
-	pip install -r requirements.txt
-	```
+## Features
+- Ward selector with per-ward metrics: heat index, temperature, vulnerability, green cover, and recommendations
+- Interactive Folium map centered on selected ward
+- Altair charts updated for the selected ward and filtered wards
+- Green cover recommendation generator and simple ML risk model
+- LLM-based advisor for natural-language heat-risk questions (configurable APIs)
 
-2. Generate or place the ward dataset:
+## Quickstart (Windows)
+1. Clone the repo and create a virtual environment
 
-	```bash
-	python -m src.data_generation     # creates data/ward_data.csv (synthetic)
-	```
+```bash
+git clone https://github.com/Manasa-L-Hegde/Urban_Heat_Island.git
+cd Urban_Heat_Island
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-3. Run the Streamlit dashboard:
+2. Generate or place dataset
 
-	```bash
-	python -m streamlit run app/app.py
-	```
+```bash
+python -m src.data_generation
+```
 
-4. (Optional) Run tests:
+3. Run the dashboard
 
-	```bash
-	pytest -q
-	```
+```bash
+streamlit run app/app.py
+```
 
-## Planned work
-- Add integration tests, packaging, and a deployment workflow (Streamlit share or Docker)
-- Improve LLM prompt safety and cost controls
-- Improve map rendering performance for larger datasets
+Open http://localhost:8502 (or the Streamlit URL printed in the terminal).
 
-## Tech Stack
-Python, Satellite API, Folium, Streamlit, Pandas, NumPy
+## Project layout
+- `app/` — Streamlit UI (`app.py`) and helpers
+- `src/` — data generation, fusion, heat-index, advisor, and map builder
+- `data/` — generated or provided ward-level CSV (`ward_data.csv`)
+- `models/` — simple ML model for risk labeling
+- `visualization/`, `processing/`, `outputs/` — supporting scripts and outputs
 
-## Project Structure
-- `data/ward_data.csv`: ward-level dataset used by the current phase of the project
-- `src/data_generation.py`: creates the synthetic ward dataset
-- `src/data_fusion.py`: combines satellite and weather temperatures
-- `src/heat_index.py`: computes the heat index and related scores
-- `app/app.py`: Streamlit application for the interactive dashboard
-- `requirements.txt`: Python dependencies
+## Deployment notes
+- The app uses third-party APIs (OpenAI / Google Generative AI) optionally — set credentials as environment variables before deploying.
+- For a quick deploy, push to Streamlit Community Cloud, Railway, or Render. Replace the `Live demo` URL above once deployed.
 
-## Live demo
-https://rakshitha-m-r05-urban-heat-hyperlocal-mapping-appapp-2f7cnl.streamlit.app/
+## Contributing
+- Fork, create a feature branch, and submit a PR. Please include small, focused changes with tests when possible.
 
 ## License
-This project is licensed under the MIT License. See [LICENSE](LICENSE).
+MIT — see the `LICENSE` file.
+
+---
+
+If you want, I can now push this README update to the repository and help you deploy the app. Which would you like me to do next?
