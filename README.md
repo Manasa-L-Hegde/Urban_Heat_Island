@@ -2,9 +2,7 @@
 
 Data-driven Streamlit application that identifies and visualizes urban heat islands at the ward level. The app fuses satellite thermal imagery, ground weather station readings, and ward-level attributes to produce interactive heat-risk maps, ward dashboards, and actionable green-cover recommendations.
 
-Live demo: YOUR_DEPLOY_URL_HERE (replace with your deployed Streamlit URL)
-
----
+------------------------------------
 
 ## Quick overview
 - Combines satellite + weather + built-environment data into a ward-level `Final_Temperature`.
@@ -57,9 +55,9 @@ Open http://localhost:8502 (or the Streamlit URL printed in the terminal).
 ## Contributing
 - Fork, create a feature branch, and submit a PR. Please include small, focused changes with tests when possible.
 
+##Demo Link
+https://manasa-l-hegde-urban-heat-island-appapp-ijwlht.streamlit.app/
+
 ## License
 MIT — see the `LICENSE` file.
 
----
-
-If you want, I can now push this README update to the repository and help you deploy the app. Which would you like me to do next?
