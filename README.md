@@ -39,8 +39,6 @@ python -m src.data_generation
 streamlit run app/app.py
 ```
 
-Open http://localhost:8502 (or the Streamlit URL printed in the terminal).
-
 ## Project layout
 - `app/` — Streamlit UI (`app.py`) and helpers
 - `src/` — data generation, fusion, heat-index, advisor, and map builder
